@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Men's Health Clinic Log · KK Sungai Besi</title>
+<style>
+:root{
+  --navy:#1f316b; --navy-2:#2c4590; --red:#c8102e; --yellow:#f2b705;
+  --ink:#1c2333; --muted:#5d6778; --line:#e3e7ef; --bg:#f5f7fb; --card:#fff;
+  --ok:#1f8a5b; --warn:#b7791f; --bad:#c8102e;
+  --sev0:#2e8b57; --sev1:#8bbf3f; --sev2:#f2b705; --sev3:#e07b1f; --sev4:#c8102e;
+  --r:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "Source Sans 3","Segoe UI",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.stripe{height:5px;background:linear-gradient(90deg,var(--navy) 0 60%,var(--red) 60% 80%,var(--yellow) 80%)}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{width:42px;height:42px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.5px;flex:none}
+.brand small{display:block;font-size:10px;letter-spacing:1.6px;color:var(--muted);font-weight:600}
+.brand h1{margin:0;font-size:22px;color:var(--navy);line-height:1.1}
+.brand .sub{font-size:12.5px;color:var(--muted)}
+.hdr-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);background:#fff}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:#aab}
+.pill.ok .dot{background:var(--ok)} .pill.demo .dot{background:var(--yellow)} .pill.err .dot{background:var(--bad)}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:13px}
+.btn:hover{border-color:var(--navy-2)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:var(--navy-2)}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:3px 9px;font-size:12px}
+.banner{margin:12px 22px 0;padding:9px 14px;border-radius:10px;background:#fff8e1;border:1px solid #f3dc8b;font-size:13px;display:none}
+.banner.show{display:block}
+.layout{display:grid;grid-template-columns:390px 1fr;gap:18px;padding:16px 22px 40px;align-items:start}
+@media (max-width:1100px){.layout{grid-template-columns:1fr}.form{position:static;max-height:none}}
+.seg.viewseg{display:none}
+@media (max-width:1100px){
+  .seg.viewseg{display:inline-flex}
+  body.v-dash .form{display:none}
+  body.v-log .dash{display:none}
+}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card h2{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.card h2 .hint{margin-left:auto;font-size:11.5px;font-weight:500;color:var(--muted)}
+.accent{border-top:4px solid var(--navy)}
+/* ---------- form ---------- */
+.form{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.sec{font-size:11px;letter-spacing:1.2px;font-weight:700;color:var(--muted);margin:14px 0 6px;text-transform:uppercase}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:12.5px;font-weight:600;margin:6px 0 3px}
+label .opt{font-weight:400;color:var(--muted)}
+input[type=text],input[type=date],input[type=number],input[type=search],select,textarea{width:100%;border:1px solid #cfd5e1;border-radius:8px;padding:6px 9px;background:#fff}
+textarea{min-height:54px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid #c9d4f3;border-color:var(--navy-2)}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff;background:#8b93a5;white-space:nowrap}
+.sev-0{background:var(--sev0)} .sev-1{background:var(--sev1);color:#1c2333} .sev-2{background:var(--sev2);color:#1c2333} .sev-3{background:var(--sev3)} .sev-4{background:var(--sev4)}
+.inline-badge{margin-top:4px;min-height:20px;font-size:12px;color:var(--muted)}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:inline-flex;align-items:center;gap:5px;margin:0;font-weight:500;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer;font-size:12.5px}
+.checks input{margin:0}
+.alert{border-radius:8px;padding:8px 10px;font-size:12.5px;margin-top:8px;display:none}
+.alert.show{display:block}
+.alert.red{background:#fdecee;border:1px solid #f3b9c1;color:#8a0c20}
+.alert.blue{background:#edf2fd;border:1px solid #c7d4f4;color:#1f316b}
+.form-actions{display:flex;gap:8px;margin-top:14px;position:sticky;bottom:-16px;background:#fff;padding:10px 0 4px}
+.form-actions .btn.primary{flex:1}
+.editing-tag{display:none;font-size:12px;background:#fff3cd;border:1px solid #f0d98c;border-radius:6px;padding:4px 8px;margin-bottom:8px}
+.editing-tag.show{display:block}
+/* ---------- dashboard ---------- */
+.dash{display:flex;flex-direction:column;gap:16px;min-width:0}
+.filters{display:flex;flex-direction:column;gap:10px}
+.periods{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:5px 11px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--navy);color:#fff}
+.periods input[type=date]{width:auto;padding:4px 7px;font-size:12.5px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.fgrid label{font-size:11px;letter-spacing:.3px;color:var(--muted);text-transform:uppercase;margin:0 0 2px}
+.fgrid select{padding:5px 8px;font-size:13px}
+.fgrid select.active{border-color:var(--navy);background:#eef2fc;font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-height:24px}
+.chip{background:#eef2fc;border:1px solid #c7d4f4;color:var(--navy);border-radius:999px;padding:2px 4px 2px 10px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.chip button{border:0;background:transparent;cursor:pointer;color:var(--navy);font-weight:700;padding:0 5px;border-radius:50%}
+.chip button:hover{background:#d7e0f7}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media (max-width:1400px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;border-top:4px solid var(--navy)}
+.kpi:nth-child(5n+2){border-top-color:var(--red)} .kpi:nth-child(5n+3){border-top-color:var(--yellow)}
+.kpi .k{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi .v{font-size:26px;font-weight:700;color:var(--navy);line-height:1.15;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:1400px){.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:800px){.grid2,.grid3{grid-template-columns:1fr}}
+.hbars{display:flex;flex-direction:column;gap:5px}
+.hb{display:grid;grid-template-columns:150px 1fr 44px;align-items:center;gap:8px;cursor:pointer;border-radius:6px;padding:2px 4px}
+.hb:hover{background:#f1f4fa}
+.hb.sel{background:#e7edfb;outline:1px solid #c7d4f4}
+.hb.dim{opacity:.45}
+.hb .l{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb .t{height:14px;background:#eef1f6;border-radius:4px;overflow:hidden}
+.hb .f{height:100%;background:var(--navy);border-radius:4px}
+.hb .n{font-size:12.5px;font-weight:700;text-align:right}
+.hb .n small{font-weight:400;color:var(--muted)}
+.empty{color:var(--muted);font-size:13px;padding:10px 0}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+svg text{font-family:inherit}
+.monthbar{cursor:pointer}
+.monthbar:hover rect{opacity:.85}
+/* table */
+.tbl-wrap{overflow:auto;max-height:560px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{position:sticky;top:0;background:#f0f3f9;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;z-index:1}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#f6f8fd}
+td.wrap{min-width:220px;max-width:340px}
+.tools{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.tools input{max-width:320px}
+.muted{color:var(--muted)}
+.dq li{margin:3px 0;font-size:13px}
+.dq b{color:var(--navy)}
+.outc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.outc div{background:#f5f7fb;border-radius:8px;padding:8px 10px}
+.outc b{display:block;font-size:20px;color:var(--navy)}
+.outc span{font-size:11.5px;color:var(--muted)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(18,25,45,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
+.modal.show{display:flex}
+.modal .box{background:#fff;border-radius:14px;max-width:760px;width:100%;padding:20px 22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal h3{margin:0 0 4px;color:var(--navy)}
+.visit{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px}
+.visit .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.visit .top b{color:var(--navy)}
+.visit .grid{display:grid;grid-template-columns:130px 1fr;gap:2px 10px;margin-top:6px;font-size:12.5px}
+.visit .grid div:nth-child(odd){color:var(--muted)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:9px 16px;border-radius:10px;font-weight:600;display:none;z-index:60}
+.toast.show{display:block}
+.toast.err{background:var(--bad)}
+.spark{font-size:12px;color:var(--muted)}
+@media print{.form,header .hdr-right,.tools,.filters{display:none}.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<header>
+  <div class="logo">MHC</div>
+  <div class="brand">
+    <h1>Men's Health Clinic Log</h1>
+    <div class="sub">KK Sungai Besi · Men's Health Hub</div>
+  </div>
+  <div class="hdr-right">
+    <div class="seg viewseg" id="viewSeg">
+      <button data-v="dash" class="on">Dashboard</button>
+      <button data-v="log">Log visit</button>
+    </div>
+    <span id="conn" class="pill"><span class="dot"></span><span id="connTxt">Not connected</span></span>
+    <button class="btn" id="btnRefresh" title="Reload from Google Sheet">Refresh</button>
+    <button class="btn" id="btnExport" title="Download filtered visits as CSV">Export CSV</button>
+    <button class="btn" id="btnPrint">Print</button>
+    <button class="btn" id="btnSettings">Settings</button>
+  </div>
+</header>
+<div id="banner" class="banner"></div>
+
+<div class="layout">
+  <!-- ================= FORM ================= -->
+  <aside class="card accent form" id="formCard">
+    <h2>Log visit <span class="hint" id="formHint">New entry</span></h2>
+    <div class="editing-tag" id="editTag">Editing <b id="editId"></b> · <a href="#" id="cancelEdit">cancel</a></div>
+    <form id="f" autocomplete="off">
+      <div class="sec">Patient</div>
+      <div class="row">
+        <div><label>Visit date *</label><input type="date" name="date" required></div>
+        <div><label>Clinician</label><input type="text" name="clinician" list="dlClin" placeholder="e.g. Dr Thung"></div>
+      </div>
+      <label>IC / Passport * <span class="opt">· finds returning patients</span></label>
+      <input type="text" name="ic" list="dlIc" placeholder="12 digits, no dashes" inputmode="numeric">
+      <div class="inline-badge" id="icInfo"></div>
+      <label>Patient name *</label>
+      <input type="text" name="name" list="dlName">
+      <div class="row3">
+        <div><label>Age</label><input type="number" name="age" min="0" max="120"></div>
+        <div><label>Case</label><select name="case"><option>Baru</option><option>Ulangan</option></select></div>
+        <div><label>Phone</label><input type="text" name="phone" placeholder="01x-xxxxxxx"></div>
+      </div>
+      <label>Address / locality <span class="opt">optional</span></label>
+      <input type="text" name="address">
+
+      <div class="sec">Diagnosis</div>
+      <label>1. Main men's health diagnosis *</label>
+      <select name="group" required></select>
+      <label>Diagnosis details</label>
+      <textarea name="dx" placeholder="e.g. Moderate ED with performance anxiety"></textarea>
+      <label>Other men's health diagnoses <span class="opt">tick all that apply</span></label>
+      <div class="checks" id="otherDxChecks"></div>
+      <div class="row3">
+        <div><label>IIEF-5</label><input type="number" name="iief" min="1" max="25" placeholder="1-25"></div>
+        <div><label>IPSS</label><input type="number" name="ipss" min="0" max="35" placeholder="0-35"></div>
+        <div><label>EHS</label><select name="ehs"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+      </div>
+      <div class="inline-badge" id="scoreInfo"></div>
+      <label>2. Comorbidities</label>
+      <div class="checks" id="comorbChecks"></div>
+      <input type="text" name="comorbOther" placeholder="Other comorbidities, e.g. COPD, BPH under Uro" style="margin-top:6px">
+
+      <div class="sec">Lifestyle</div>
+      <div class="row">
+        <div><label>Smoking</label><select name="smoking"></select></div>
+        <div><label>Cigarettes / day</label><input type="number" name="cig" min="0" max="100"></div>
+      </div>
+      <div class="row">
+        <div><label>Vaping</label><select name="vaping"></select></div>
+        <div><label>Alcohol</label><select name="alcohol"></select></div>
+      </div>
+      <label>Physical activity</label>
+      <select name="activity"></select>
+      <div class="row3">
+        <div><label>Weight (kg)</label><input type="number" name="weight" min="20" max="300" step="0.1"></div>
+        <div><label>Height (cm)</label><input type="number" name="height" min="100" max="230" step="0.1"></div>
+        <div><label>BMI</label><input type="text" id="bmiOut" readonly tabindex="-1" style="background:#f5f7fb"></div>
+      </div>
+      <div class="inline-badge" id="bmiInfo"></div>
+      <label>Other substances <span class="opt">tick all that apply</span></label>
+      <div class="checks" id="subChecks"></div>
+      <input type="text" name="subOther" placeholder="Other, e.g. kratom" style="margin-top:6px">
+
+      <div class="sec">Plan</div>
+      <label>Management</label>
+      <textarea name="mgmt" placeholder="e.g. TLC, T Sildenafil 50mg PRN"></textarea>
+      <div class="row">
+        <div><label>PDE5i status</label><select name="pde"></select></div>
+        <div><label>PDE5i drug</label><select name="drug"><option value="">-</option><option>Sildenafil</option><option>Tadalafil</option></select></div>
+      </div>
+      <div class="alert red" id="nitrateAlert">IHD or nitrate noted with a PDE5i. Confirm the patient is not on nitrates (including SL GTN) and record cardiac risk.</div>
+      <div class="row">
+        <div><label>Follow-up plan</label><input type="text" name="fu" placeholder="e.g. TCA 2/12"></div>
+        <div><label>Follow-up under</label><select name="fuUnder"></select></div>
+      </div>
+      <div class="row">
+        <div><label>Referred from</label><input type="text" name="refFrom" list="dlRefFrom" value="KKSB"></div>
+        <div><label>Referred to</label><input type="text" name="refTo" list="dlRefTo"></div>
+      </div>
+      <label>Notes <span class="opt">optional</span></label>
+      <textarea name="notes"></textarea>
+      <div class="alert blue" id="formMsg"></div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="btnReset">Clear</button>
+        <button type="submit" class="btn primary" id="btnSave">Save visit</button>
+      </div>
+    </form>
+    <datalist id="dlIc"></datalist><datalist id="dlName"></datalist>
+    <datalist id="dlRefFrom"></datalist><datalist id="dlRefTo"></datalist><datalist id="dlClin"></datalist>
+  </aside>
+
+  <!-- ================= DASHBOARD ================= -->
+  <main class="dash">
+    <section class="card filters">
+      <h2>Filters <span class="hint">Pick from the dropdowns, or click any bar or month in the charts</span></h2>
+      <div class="periods">
+        <div class="seg" id="periodSeg">
+          <button data-p="all" class="on">All time</button>
+          <button data-p="month">This month</button>
+          <button data-p="3m">Last 3 months</button>
+          <button data-p="year">This year</button>
+        </div>
+        <span class="muted" style="font-size:12.5px;margin-left:6px">From</span><input type="date" id="fFrom">
+        <span class="muted" style="font-size:12.5px">to</span><input type="date" id="fTo">
+        <button class="btn sm" id="btnClear" style="margin-left:auto">Clear all filters</button>
+      </div>
+      <div class="fgrid" id="fgrid"></div>
+      <div class="chips" id="chips"></div>
+    </section>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="card">
+      <h2>Visits by month <span class="hint">Click a month to filter to it</span></h2>
+      <div id="chMonth"></div>
+      <div class="legend"><span><i style="background:var(--navy)"></i>New (Baru)</span><span><i style="background:var(--yellow)"></i>Follow-up (Ulangan)</span></div>
+    </section>
+
+    <section class="grid3">
+      <div class="card"><h2>Main diagnosis</h2><div id="chGroup"></div></div>
+      <div class="card"><h2>IIEF-5 severity <span class="hint">visits with a score</span></h2><div id="chSev"></div></div>
+      <div class="card"><h2>PDE5i status <span class="hint">ED visits</span></h2><div id="chPde"></div></div>
+      <div class="card"><h2>Age group</h2><div id="chAge"></div></div>
+      <div class="card"><h2>Comorbidities <span class="hint">% of visits</span></h2><div id="chComorb"></div></div>
+      <div class="card"><h2>Lifestyle risk <span class="hint">% of visits</span></h2><div id="chLife"></div><div class="muted" id="lifeNote" style="font-size:11.5px;margin-top:8px"></div></div>
+      <div class="card"><h2>BMI category <span class="hint">Asian cut-offs</span></h2><div id="chBmi"></div></div>
+      <div class="card"><h2>Referred from <span class="hint">outside KKSB</span></h2><div id="chRefFrom"></div></div>
+      <div class="card"><h2>Referred to</h2><div id="chRefTo"></div></div>
+      <div class="card"><h2>Follow-up under</h2><div id="chFu"></div></div>
+    </section>
+
+    <section class="grid2">
+      <div class="card">
+        <h2>IIEF-5 outcomes <span class="hint">patients with 2 or more scores</span></h2>
+        <div id="outcomes"></div>
+      </div>
+      <div class="card">
+        <h2>Data completeness <span class="hint">within current filters</span></h2>
+        <ul class="dq" id="dq" style="padding-left:18px;margin:0"></ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Visit register <span class="hint" id="regCount"></span></h2>
+      <div class="tools">
+        <input type="search" id="search" placeholder="Search name, IC, diagnosis, management…">
+        <span class="muted" style="font-size:12px">Click a row to see the patient's visits</span>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr>
+          <th data-s="date">Date</th><th data-s="name">Patient</th><th data-s="ic">IC</th><th data-s="age">Age</th>
+          <th data-s="case">Case</th><th data-s="group">Group</th><th>Diagnosis</th><th data-s="iief">IIEF-5</th>
+          <th data-s="pde">PDE5i</th><th>Follow-up</th><th data-s="clinician">Clinician</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+    </section>
+  </main>
+</div>
+
+<!-- patient modal -->
+<div class="modal" id="pModal"><div class="box">
+  <div style="display:flex;align-items:flex-start;gap:10px">
+    <div><h3 id="pName"></h3><div class="muted" id="pSub"></div></div>
+    <div style="margin-left:auto;display:flex;gap:6px">
+      <button class="btn sm primary" id="pNew">New visit for this patient</button>
+      <button class="btn sm" data-close>Close</button>
+    </div>
+  </div>
+  <div id="pVisits"></div>
+</div></div>
+
+<!-- settings modal -->
+<div class="modal" id="sModal"><div class="box" style="max-width:560px">
+  <h3>Settings</h3>
+  <p class="muted" style="margin-top:4px">Connect this page to the Log tab of your Google Sheet through the Apps Script web app. Until it is connected, the page shows made-up demo data and nothing is saved.</p>
+  <label>Apps Script web app URL</label>
+  <input type="text" id="sUrl" placeholder="https://script.google.com/macros/s/…/exec">
+  <label>Passcode</label>
+  <input type="text" id="sKey" placeholder="Same passcode as in setPasscode()">
+  <label style="display:flex;gap:6px;align-items:center;font-weight:500"><input type="checkbox" id="sRemember"> Remember the passcode on this device</label>
+  <p class="muted" style="font-size:12px">Leave this unticked on shared clinic computers. The passcode will then be asked again when the browser is closed.</p>
+  <label>Default clinician name</label>
+  <input type="text" id="sClin" placeholder="e.g. Dr Thung Senk Chung">
+  <div style="display:flex;gap:8px;margin-top:16px">
+    <button class="btn danger" id="sForget">Disconnect</button>
+    <span style="flex:1"></span>
+    <button class="btn" data-close>Cancel</button>
+    <button class="btn primary" id="sSave">Save and connect</button>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+/* ================= constants ================= */
+const GROUPS = ['ED','BPH/LUTS','Hypogonadism','Ejaculatory disorder','Low libido',"Peyronie's",'Fertility/contraception','Partner sexual issue','Genital/scrotal','Psychosexual/mental health','Skin/hair','Screening (normal)','Other'];
+const PDE = ['Prescribed','Continued','Declined - cost','Declined','Deferred','Cardiac clearance first','Non-responder','N/A'];
+const FU_UNDER = ['FMS','OPD','NCD','Hospital/Specialist','PRN','Other','Not specified'];
+const SMOKING = ['Current','Ex','Non','Not recorded'];
+const VAPING = ['Current','Ex','Non','Not recorded'];
+const ALCOHOL = ['Current','Ex','Non','Not recorded'];
+const ACTIVITY = ['Active (150+ min/week)','Insufficient','Sedentary','Not recorded'];
+const BMI_CAT = ['Underweight (<18.5)','Normal (18.5-22.9)','Overweight (23-27.4)','Obese (27.5+)'];
+const MH_DX = ['ED','Premature ejaculation','Delayed / anejaculation','BPH/LUTS','Hypogonadism','Low libido','Peyronie\'s','Infertility','Genital / scrotal problem'];
+const COMORB_BOXES = [['DM','Diabetes'],['HPT','Hypertension'],['HPL','Dyslipidaemia'],['IHD','IHD'],['Stroke','Stroke'],['Obesity','Obesity'],['CKD','CKD'],['Depression/anxiety','Depression / anxiety'],['RVD','RVD'],['NKMI','No known illness']];
+const SUBSTANCES = ['Ubat kuat / herbal','Anabolic steroids (AAS)','Recreational drugs'];
+const LIFESTYLE = [
+  ['Current smoker', r => r.smoking==='Current', ['smoking','Current']],
+  ['Vaping', r => r.vaping==='Current', ['vaping','Current']],
+  ['Alcohol use', r => r.alcohol==='Current', ['alcohol','Current']],
+  ['Physically inactive', r => r.activity==='Insufficient' || r.activity==='Sedentary', null],
+  ['Overweight or obese (BMI 23+)', r => r.bmiN!=null && r.bmiN>=23, null],
+  ['Ubat kuat / herbal', r => /herbal|ubat kuat/i.test(r.substances), null],
+  ['Anabolic steroids', r => /AAS|steroid/i.test(r.substances), null]
+];
+const SEV = ['No ED (22-25)','Mild (17-21)','Mild-moderate (12-16)','Moderate (8-11)','Severe (1-7)'];
+const AGES = ['<30','30-39','40-49','50-59','60-69','70+'];
+const COMORB = [
+  ['DM', /\bDM\b|diabet/i], ['HPT', /\bHPT\b|hypertension/i], ['HPL', /\bHPL\b|dyslip/i],
+  ['IHD', /\bIHD\b|ischa?emic|\bCAD\b/i], ['Stroke', /stroke|\bCVA\b/i], ['Obesity', /obes/i], ['CKD', /\bCKD\b|ESRF|ESRD/i],
+  ['Depression/anxiety', /\bMDD\b|\bGAD\b|depress|anxiety/i]
+];
+const KEYS = ['id','date','name','ic','phone','age','case','group','dx','otherDx','iief','ipss','ehs','smoking','cig','vaping','alcohol','activity','weight','height','bmi','substances','comorb','mgmt','pde','drug','fu','fuUnder','refFrom','refTo','address','notes','clinician','enteredAt'];
+const FORM_KEYS = ['date','name','ic','phone','age','case','group','dx','iief','ipss','ehs','smoking','cig','vaping','alcohol','activity','weight','height','mgmt','pde','drug','fu','fuUnder','refFrom','refTo','address','notes','clinician'];
+function bmiCat(b){ if (b==null) return ''; return b<18.5?BMI_CAT[0]:b<23?BMI_CAT[1]:b<27.5?BMI_CAT[2]:BMI_CAT[3]; }
+function calcBmi(w,h){ w=num(w); h=num(h); if (!w || !h || h<100 || h>230) return null; return Math.round(w/((h/100)*(h/100))*10)/10; }
+const LS = 'mhc-log-settings';
+
+/* ================= state ================= */
+let settings = loadSettings();
+let rows = [];          // all visits, with derived fields
+let mode = 'demo';      // 'live' | 'demo'
+let editingId = null;
+let sortKey = 'date', sortDir = -1;
+const F = { from:'', to:'', case:'', group:'', ed:'', sev:'', age:'', pde:'', smoking:'', vaping:'', alcohol:'', activity:'', bmiCat:'', comorb:'', refFrom:'', refTo:'', fuUnder:'', clinician:'', month:'' };
+const FILTER_DEFS = [
+  ['case','Case', () => ['Baru','Ulangan']],
+  ['group','Main diagnosis', () => GROUPS],
+  ['ed','ED present', () => ['Yes','No']],
+  ['sev','IIEF-5 severity', () => SEV],
+  ['age','Age group', () => AGES],
+  ['comorb','Comorbidity', () => COMORB.map(c=>c[0])],
+  ['pde','PDE5i status', () => PDE],
+  ['smoking','Smoking', () => SMOKING],
+  ['vaping','Vaping', () => VAPING],
+  ['alcohol','Alcohol', () => ALCOHOL],
+  ['activity','Physical activity', () => ACTIVITY],
+  ['bmiCat','BMI category', () => BMI_CAT],
+  ['refFrom','Referred from', () => uniq(rows.map(r=>r.refFrom))],
+  ['refTo','Referred to', () => uniq(rows.map(r=>r.refTo))],
+  ['fuUnder','Follow-up under', () => FU_UNDER],
+  ['clinician','Clinician', () => uniq(rows.map(r=>r.clinician))]
+];
+
+/* ================= helpers ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uniq = a => [...new Set(a.filter(v => v !== '' && v != null))].sort((x,y)=>String(x).localeCompare(String(y)));
+const num = v => (v === '' || v == null || isNaN(Number(v))) ? null : Number(v);
+const pct = (a,b) => b ? Math.round(a*100/b) + '%' : '-';
+const todayISO = () => { const d = new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+const fmtDate = iso => iso ? iso.slice(8,10)+'/'+iso.slice(5,7)+'/'+iso.slice(0,4) : '';
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmtMonth = ym => MONTHS[Number(ym.slice(5,7))-1] + ' ' + ym.slice(2,4);
+function toast(msg, err){ const t=$('#toast'); t.textContent=msg; t.className='toast show'+(err?' err':''); clearTimeout(t._h); t._h=setTimeout(()=>t.className='toast',2600); }
+
+function loadSettings(){
+  let s = {};
+  try { s = JSON.parse(localStorage.getItem(LS) || '{}'); } catch(e) {}
+  try { if (!s.key) s.key = sessionStorage.getItem(LS+'-key') || ''; } catch(e) {}
+  return s;
+}
+function saveSettings(s){
+  const keep = { url:s.url||'', clin:s.clin||'', remember:!!s.remember };
+  if (s.remember) keep.key = s.key || '';
+  try { localStorage.setItem(LS, JSON.stringify(keep)); } catch(e) {}
+  try { if (s.remember) sessionStorage.removeItem(LS+'-key'); else sessionStorage.setItem(LS+'-key', s.key||''); } catch(e) {}
+}
+
+function ageFromIC(ic, visitDate){
+  const m = String(ic||'').replace(/\D/g,'').match(/^(\d{2})(\d{2})(\d{2})\d{6}$/);
+  if (!m) return null;
+  const ref = visitDate ? new Date(visitDate) : new Date();
+  let yy = Number(m[1]); const mm = Number(m[2]), dd = Number(m[3]);
+  if (mm < 1 || mm > 12 || dd < 1 || dd > 31) return null;
+  const year = yy + (yy > (ref.getFullYear() % 100) ? 1900 : 2000);
+  let age = ref.getFullYear() - year;
+  if (ref.getMonth()+1 < mm || (ref.getMonth()+1 === mm && ref.getDate() < dd)) age--;
+  return age >= 0 && age < 120 ? age : null;
+}
+function sevOf(s){ if (s==null) return ''; if (s>=22) return SEV[0]; if (s>=17) return SEV[1]; if (s>=12) return SEV[2]; if (s>=8) return SEV[3]; return SEV[4]; }
+function sevIdx(label){ return SEV.indexOf(label); }
+function ipssOf(s){ if (s==null) return ''; return s<=7 ? 'Mild (0-7)' : s<=19 ? 'Moderate (8-19)' : 'Severe (20-35)'; }
+function ageGroup(a){ if (a==null) return ''; return a<30?'<30':a<40?'30-39':a<50?'40-49':a<60?'50-59':a<70?'60-69':'70+'; }
+
+function derive(r){
+  const o = {}; KEYS.forEach(k => o[k] = r[k] == null ? '' : String(r[k]).trim());
+  o.date = (o.date || '').slice(0,10);
+  o.month = o.date ? o.date.slice(0,7) : '';
+  o.ageN = num(o.age); o.iiefN = num(o.iief); o.ipssN = num(o.ipss);
+  o.sev = sevOf(o.iiefN); o.ageG = ageGroup(o.ageN);
+  ['smoking','vaping','alcohol','activity'].forEach(k => { if (!o[k]) o[k] = 'Not recorded'; });
+  o.bmiN = num(o.bmi) ?? calcBmi(o.weight, o.height);
+  o.bmiCat = bmiCat(o.bmiN);
+  o.isED = o.group === 'ED' || /\bED\b|erectile/i.test(o.dx) || /(^|,\s*)ED(,|$)/.test(o.otherDx);
+  o.ed = o.isED ? 'Yes' : 'No';
+  const parts = o.comorb.split(',').map(s=>s.trim()).filter(p => p && !/^TRO\b/i.test(p));
+  o.cm = COMORB.filter(([,re]) => parts.some(p => re.test(p))).map(c=>c[0]);
+  o.pkey = (o.ic || '').replace(/\W/g,'').toUpperCase() || ('NAME:' + o.name.toUpperCase());
+  o.refFrom = o.refFrom || 'KKSB';
+  return o;
+}
+function finalize(){
+  // visit number per patient by date
+  const by = {};
+  rows.forEach(r => (by[r.pkey] = by[r.pkey] || []).push(r));
+  Object.values(by).forEach(list => {
+    list.sort((a,b) => (a.date||'9999').localeCompare(b.date||'9999'));
+    list.forEach((r,i) => { r.visitNo = i+1; r.totalVisits = list.length; });
+  });
+}
+
+/* ================= data loading ================= */
+async function api(action, extra){
+  const res = await fetch(settings.url, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(Object.assign({ action, key: settings.key }, extra||{})) });
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error || 'Request failed');
+  return j;
+}
+async function load(){
+  if (settings.url && settings.key){
+    setConn('busy','Loading…');
+    try {
+      const j = await api('list');
+      rows = j.rows.map(derive); mode = 'live'; finalize();
+      setConn('ok', 'Google Sheet · ' + rows.length + ' visits');
+      banner('');
+    } catch(e){
+      setConn('err','Not connected');
+      banner('Could not reach the Google Sheet (' + esc(e.message) + '). Check the URL and passcode in Settings. Showing demo data meanwhile.');
+      useDemo();
+    }
+  } else {
+    useDemo();
+    banner('Demo mode: these are made-up patients. Open <b>Settings</b> and paste your Apps Script URL and passcode to load the real Men\'s Health register.');
+  }
+  refreshAll();
+}
+function useDemo(){ mode = 'demo'; rows = demoRows().map(derive); finalize(); if (!settings.url) setConn('demo','Demo data'); }
+function setConn(cls, txt){ $('#conn').className = 'pill ' + (cls==='ok'?'ok':cls==='demo'?'demo':cls==='err'?'err':''); $('#connTxt').textContent = txt; }
+function banner(html){ const b=$('#banner'); b.innerHTML = html; b.className = 'banner' + (html?' show':''); }
+
+/* ================= demo data (fictional) ================= */
+function demoRows(){
+  let seed = 7; const rnd = () => (seed = (seed*9301+49297)%233280)/233280;
+  const pick = a => a[Math.floor(rnd()*a.length)];
+  const out = []; let id = 1;
+  const pts = [];
+  for (let i=1;i<=46;i++){
+    const age = 25 + Math.floor(rnd()*50);
+    const yy = String((2026-age)%100).padStart(2,'0');
+    pts.push({ name:'Demo Patient ' + String(i).padStart(2,'0'), ic: yy + '0101' + '14' + String(1000+i).slice(-4), age,
+      comorb: pick(['DM, HPT, HPL','HPT, HPL','DM, HPL','HPT','DM, HPT, HPL, IHD','','HPL, Obesity','HPT, Stroke']), smoking: pick(['Current','Not recorded','Not recorded','Non','Ex']),
+      vaping: pick(['Current','Non','Not recorded','Not recorded']), alcohol: pick(['Current','Non','Non','Not recorded']), activity: pick(ACTIVITY),
+      height: rnd()<0.7 ? 160+Math.floor(rnd()*20) : '', weight: 55+Math.floor(rnd()*45), substances: rnd()<0.1 ? 'Ubat kuat / herbal' : '' });
+  }
+  const start = new Date(2025,9,20);
+  for (let m=0;m<14;m++){
+    const n = 5 + Math.floor(rnd()*10);
+    for (let k=0;k<n;k++){
+      const p = pick(pts); const d = new Date(start.getFullYear(), start.getMonth()+m, 1+Math.floor(rnd()*27));
+      if (d > new Date()) continue;
+      const group = rnd()<0.78 ? 'ED' : pick(['BPH/LUTS','Hypogonadism','Ejaculatory disorder','Genital/scrotal',"Peyronie's",'Skin/hair']);
+      const iief = group==='ED' ? 3+Math.floor(rnd()*20) : '';
+      const pde = group==='ED' ? pick(['Prescribed','Continued','Deferred','Deferred','Declined','Declined - cost','Cardiac clearance first']) : 'N/A';
+      out.push({ id:'DEMO-'+String(id++).padStart(4,'0'), date: d.toISOString().slice(0,10), name:p.name, ic:p.ic, phone:'', age:p.age,
+        case:'', group, dx: group==='ED' ? (iief>=22 ? 'ED symptoms, normal IIEF-5' : sevOf(iief).split(' (')[0]+' ED') : group, iief, ipss: group==='BPH/LUTS'? 8+Math.floor(rnd()*20):'', ehs: group==='ED'? 1+Math.floor(rnd()*3):'',
+        smoking:p.smoking, cig: p.smoking==='Current'? 5+Math.floor(rnd()*20):'', comorb:p.comorb,
+        vaping:p.vaping, alcohol:p.alcohol, activity:p.activity, weight: p.height? p.weight:'', height:p.height, substances:p.substances,
+        otherDx: group!=='ED' && rnd()<0.4 ? 'ED' : (group==='ED' && rnd()<0.15 ? 'Premature ejaculation' : ''), mgmt: pde==='Prescribed'||pde==='Continued' ? 'T Sildenafil 50mg PRN' : 'TLC',
+        pde, drug: pde==='Prescribed'||pde==='Continued' ? pick(['Sildenafil','Tadalafil']) : '', fu: pick(['TCA 1/12','TCA 2/12','TCA 3/12']), fuUnder: pick(['FMS','OPD','NCD','Not specified']),
+        refFrom: rnd()<0.85?'KKSB':pick(['KK AU2','KKC','DBKL programme']), refTo: rnd()<0.12?pick(['Urology','Cardiology','Psychiatry']):'', address:'', notes:'', clinician: pick(['Dr A','Dr B','Dr C']), enteredAt:'' });
+    }
+  }
+  // set case from order
+  const seen = new Set();
+  out.sort((a,b)=>a.date.localeCompare(b.date)).forEach(r => { r.case = seen.has(r.ic) ? 'Ulangan' : 'Baru'; seen.add(r.ic); });
+  return out;
+}
+
+/* ================= filtering ================= */
+function passes(r, skip){
+  if (skip !== 'date'){
+    if (F.from && (!r.date || r.date < F.from)) return false;
+    if (F.to && (!r.date || r.date > F.to)) return false;
+  }
+  const chk = (k, v) => skip === k || !F[k] || F[k] === v;
+  if (!chk('case', r.case)) return false;
+  if (!chk('group', r.group)) return false;
+  if (!chk('ed', r.ed)) return false;
+  if (!chk('sev', r.sev)) return false;
+  if (!chk('age', r.ageG)) return false;
+  if (!chk('pde', r.pde)) return false;
+  if (!chk('smoking', r.smoking)) return false;
+  if (!chk('vaping', r.vaping)) return false;
+  if (!chk('alcohol', r.alcohol)) return false;
+  if (!chk('activity', r.activity)) return false;
+  if (!chk('bmiCat', r.bmiCat)) return false;
+  if (skip !== 'comorb' && F.comorb && !r.cm.includes(F.comorb)) return false;
+  if (!chk('refFrom', r.refFrom)) return false;
+  if (!chk('refTo', r.refTo)) return false;
+  if (!chk('fuUnder', r.fuUnder)) return false;
+  if (!chk('clinician', r.clinician)) return false;
+  return true;
+}
+const filtered = skip => rows.filter(r => passes(r, skip));
+
+function setFilter(k, v){ F[k] = (F[k] === v ? '' : v); refreshAll(); }
+function setRange(from, to, label){ F.from = from||''; F.to = to||''; F.month = label||''; $('#fFrom').value=F.from; $('#fTo').value=F.to; markPeriod(''); refreshAll(); }
+function markPeriod(p){ document.querySelectorAll('#periodSeg button').forEach(b => b.classList.toggle('on', b.dataset.p === p)); }
+
+/* ================= render: filters ================= */
+function renderFilterControls(){
+  const g = $('#fgrid');
+  g.innerHTML = FILTER_DEFS.map(([k,label,opts]) => {
+    const base = filtered(k);
+    const counts = {};
+    base.forEach(r => {
+      if (k==='comorb') r.cm.forEach(c => counts[c]=(counts[c]||0)+1);
+      else { const v = k==='sev'?r.sev:k==='age'?r.ageG:r[k]; if (v!=='' && v!=null) counts[v]=(counts[v]||0)+1; }
+    });
+    const list = opts();
+    if (F[k] && !list.includes(F[k])) list.push(F[k]);
+    return `<div><label>${esc(label)}</label><select data-f="${k}" class="${F[k]?'active':''}">
+      <option value="">All</option>${list.map(o => `<option value="${esc(o)}" ${F[k]===o?'selected':''}>${esc(o)} (${counts[o]||0})</option>`).join('')}</select></div>`;
+  }).join('');
+  g.querySelectorAll('select').forEach(s => s.onchange = () => { F[s.dataset.f] = s.value; refreshAll(); });
+
+  const chips = [];
+  if (F.from || F.to) chips.push(['date', F.month || ((F.from?fmtDate(F.from):'…') + ' to ' + (F.to?fmtDate(F.to):'…'))]);
+  FILTER_DEFS.forEach(([k,label]) => { if (F[k]) chips.push([k, label + ': ' + F[k]]); });
+  $('#chips').innerHTML = chips.length ? chips.map(([k,t]) => `<span class="chip">${esc(t)}<button data-x="${k}" title="Remove">×</button></span>`).join('')
+    : '<span class="muted" style="font-size:12.5px">No filters. Showing every visit.</span>';
+  $('#chips').querySelectorAll('button').forEach(b => b.onclick = () => {
+    const k = b.dataset.x; if (k==='date'){ setRange('','',''); markPeriod('all'); } else { F[k]=''; refreshAll(); }
+  });
+}
+
+/* ================= render: KPIs ================= */
+function renderKPIs(list){
+  const pts = new Set(list.map(r=>r.pkey));
+  const baru = list.filter(r=>r.case==='Baru').length, ul = list.filter(r=>r.case==='Ulangan').length;
+  const ed = list.filter(r=>r.isED);
+  const scores = list.map(r=>r.iiefN).filter(v=>v!=null).sort((a,b)=>a-b);
+  const median = scores.length ? (scores.length%2 ? scores[(scores.length-1)/2] : (scores[scores.length/2-1]+scores[scores.length/2])/2) : null;
+  const onPde = ed.filter(r=>r.pde==='Prescribed'||r.pde==='Continued').length;
+  const declined = ed.filter(r=>/^Declined/.test(r.pde)).length;
+  const cost = ed.filter(r=>r.pde==='Declined - cost').length;
+  const smokers = list.filter(r=>r.smoking==='Current'||r.vaping==='Current').length;
+  const recordedSmk = list.filter(r=>r.smoking!=='Not recorded'||r.vaping!=='Not recorded').length;
+  const refOut = list.filter(r=>r.refTo).length;
+  const ext = list.filter(r=>r.refFrom && r.refFrom!=='KKSB').length;
+  const k = [
+    ['Visits', list.length, `${pts.size} patients`],
+    ['New cases', baru, `${ul} follow-up visits`],
+    ['ED visits', ed.length, pct(ed.length, list.length) + ' of visits'],
+    ['Median IIEF-5', median==null?'-':median, scores.length + ' visits scored'],
+    ['On PDE5i', pct(onPde, ed.length), `${onPde} of ${ed.length} ED visits`],
+    ['Declined PDE5i', declined, `${cost} cited cost`],
+    ['Cardiac clearance', ed.filter(r=>r.pde==='Cardiac clearance first').length, 'before PDE5i'],
+    ['Smoking / vaping', pct(smokers, recordedSmk), `${smokers} of ${recordedSmk} with status recorded`],
+    ['Referred out', refOut, pct(refOut, list.length) + ' of visits'],
+    ['Referred in', ext, 'from outside KKSB']
+  ];
+  $('#kpis').innerHTML = k.map(([a,b,c]) => `<div class="kpi"><div class="k">${a}</div><div class="v">${b}</div><div class="s">${c}</div></div>`).join('');
+}
+
+/* ================= render: charts ================= */
+function hbars(el, items, fkey, opts){
+  opts = opts || {};
+  const max = Math.max(1, ...items.map(i=>i.v));
+  const total = opts.total || items.reduce((s,i)=>s+i.v,0);
+  if (!items.length || !items.some(i=>i.v)) { el.innerHTML = '<div class="empty">No visits match.</div>'; return; }
+  el.innerHTML = '<div class="hbars">' + items.map(i => {
+    const sel = i.fk ? F[i.fk] === i.fv : (fkey && F[fkey] === i.l), dim = fkey && F[fkey] && !sel;
+    const color = i.c || 'var(--navy)';
+    return `<div class="hb ${sel?'sel':''} ${dim?'dim':''}" data-v="${esc(i.l)}" ${i.fk?`data-fk="${esc(i.fk)}" data-fv="${esc(i.fv)}"`:''} style="${!fkey&&!i.fk?'cursor:default':''}" title="${esc(i.l)}: ${i.v}">
+      <div class="l">${esc(i.l)}</div><div class="t"><div class="f" style="width:${(i.v/max*100).toFixed(1)}%;background:${color}"></div></div>
+      <div class="n">${opts.pctOnly ? pct(i.v,total) : i.v + (opts.showPct? ` <small>${pct(i.v,total)}</small>`:'')}</div></div>`;
+  }).join('') + '</div>';
+  el.querySelectorAll('.hb').forEach(d => {
+    if (d.dataset.fk) d.onclick = () => setFilter(d.dataset.fk, d.dataset.fv);
+    else if (fkey) d.onclick = () => setFilter(fkey, d.dataset.v);
+  });
+}
+function countBy(list, fn, order){
+  const c = {}; list.forEach(r => { const v = fn(r); if (v!=='' && v!=null) c[v]=(c[v]||0)+1; });
+  const keys = order ? order.filter(k=>c[k]) : Object.keys(c).sort((a,b)=>c[b]-c[a]);
+  return keys.map(k => ({ l:k, v:c[k] }));
+}
+function renderCharts(list){
+  hbars($('#chGroup'), countBy(list, r=>r.group, GROUPS), 'group', {showPct:true});
+  const sevColors = ['var(--sev0)','var(--sev1)','var(--sev2)','var(--sev3)','var(--sev4)'];
+  hbars($('#chSev'), countBy(list, r=>r.sev, SEV).map(i=>({...i, c:sevColors[sevIdx(i.l)]})), 'sev', {showPct:true});
+  hbars($('#chPde'), countBy(list.filter(r=>r.isED), r=>r.pde, PDE).map(i=>({...i, c: /^Declined/.test(i.l)?'var(--red)': i.l==='Prescribed'||i.l==='Continued' ? 'var(--ok)' : 'var(--navy)'})), 'pde', {showPct:true});
+  hbars($('#chAge'), countBy(list, r=>r.ageG, AGES), 'age', {showPct:true});
+  const cm = COMORB.map(([c]) => ({ l:c, v:list.filter(r=>r.cm.includes(c)).length }));
+  hbars($('#chComorb'), cm, 'comorb', {total:list.length, pctOnly:false, showPct:true});
+  hbars($('#chLife'), LIFESTYLE.map(([l,fn,f]) => ({ l, v:list.filter(fn).length, c:'var(--red)', fk: f?f[0]:'', fv: f?f[1]:'' })), null, {total:list.length, showPct:true});
+  hbars($('#chBmi'), countBy(list, r=>r.bmiCat, BMI_CAT).map((i,ix)=>({...i, c:['#8bbf3f','var(--sev0)','var(--sev2)','var(--red)'][BMI_CAT.indexOf(i.l)]})), 'bmiCat', {showPct:true});
+  const rec = k => list.filter(r=>r[k]!=='Not recorded').length;
+  $('#lifeNote').textContent = `Recorded in: smoking ${pct(rec('smoking'),list.length)}, vaping ${pct(rec('vaping'),list.length)}, alcohol ${pct(rec('alcohol'),list.length)}, activity ${pct(rec('activity'),list.length)}, BMI ${pct(list.filter(r=>r.bmiN!=null).length,list.length)} of visits`;
+  hbars($('#chRefFrom'), countBy(list.filter(r=>r.refFrom!=='KKSB'), r=>r.refFrom), 'refFrom');
+  hbars($('#chRefTo'), countBy(list, r=>r.refTo).slice(0,12), 'refTo');
+  hbars($('#chFu'), countBy(list, r=>r.fuUnder, FU_UNDER), 'fuUnder', {showPct:true});
+  renderMonthly();
+}
+function renderMonthly(){
+  const list = filtered('date');
+  const el = $('#chMonth');
+  const months = uniq(list.map(r=>r.month));
+  if (!months.length){ el.innerHTML = '<div class="empty">No visits match.</div>'; return; }
+  // fill gaps
+  const all = []; let [y,m] = months[0].split('-').map(Number); const [ly,lm] = months[months.length-1].split('-').map(Number);
+  while (y<ly || (y===ly && m<=lm)){ all.push(y+'-'+String(m).padStart(2,'0')); m++; if (m>12){m=1;y++;} }
+  const data = all.map(ym => { const s = list.filter(r=>r.month===ym); return { ym, n: s.filter(r=>r.case!=='Ulangan').length, f: s.filter(r=>r.case==='Ulangan').length }; });
+  const W = Math.max(600, el.clientWidth || 800), H = 230, padL = 30, padB = 26, padT = 14;
+  const max = Math.max(4, ...data.map(d=>d.n+d.f));
+  const step = Math.ceil(max/4);
+  const top = step*4;
+  const bw = (W - padL - 10) / data.length;
+  const y0 = H - padB, sc = (H - padB - padT) / top;
+  let svg = `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Visits by month">`;
+  for (let i=0;i<=4;i++){ const yy = y0 - i*step*sc; svg += `<line x1="${padL}" x2="${W-6}" y1="${yy}" y2="${yy}" stroke="#e8ebf2"/><text x="${padL-6}" y="${yy+4}" font-size="10" text-anchor="end" fill="#7a8396">${i*step}</text>`; }
+  const inRange = ym => (!F.from || ym+'-31' >= F.from) && (!F.to || ym+'-01' <= F.to);
+  const anyRange = F.from || F.to;
+  data.forEach((d,i) => {
+    const x = padL + i*bw + bw*0.15, w = bw*0.7;
+    const hn = d.n*sc, hf = d.f*sc;
+    const op = anyRange && !inRange(d.ym) ? 0.3 : 1;
+    svg += `<g class="monthbar" data-ym="${d.ym}" opacity="${op}"><title>${fmtMonth(d.ym)}: ${d.n} new, ${d.f} follow-up</title>
+      <rect x="${padL+i*bw}" y="${padT}" width="${bw}" height="${y0-padT}" fill="transparent"/>
+      <rect x="${x}" y="${y0-hn}" width="${w}" height="${hn}" fill="#1f316b" rx="2"/>
+      <rect x="${x}" y="${y0-hn-hf}" width="${w}" height="${hf}" fill="#f2b705" rx="2"/>
+      ${d.n+d.f ? `<text x="${x+w/2}" y="${y0-hn-hf-4}" font-size="10.5" text-anchor="middle" fill="#1c2333" font-weight="700">${d.n+d.f}</text>`:''}
+      <text x="${x+w/2}" y="${H-8}" font-size="10" text-anchor="middle" fill="#5d6778">${fmtMonth(d.ym)}</text></g>`;
+  });
+  svg += '</svg>';
+  el.innerHTML = svg;
+  el.querySelectorAll('.monthbar').forEach(g => g.onclick = () => {
+    const ym = g.dataset.ym; const [yy,mm] = ym.split('-').map(Number);
+    const last = new Date(yy, mm, 0).getDate();
+    const from = ym+'-01', to = ym+'-'+String(last).padStart(2,'0');
+    if (F.from===from && F.to===to) { setRange('','',''); markPeriod('all'); } else setRange(from, to, fmtMonth(ym));
+  });
+}
+
+/* ================= outcomes & data quality ================= */
+function renderOutcomes(list){
+  const keys = new Set(list.map(r=>r.pkey));
+  const res = [];
+  keys.forEach(k => {
+    const v = rows.filter(r=>r.pkey===k && r.iiefN!=null && r.date).sort((a,b)=>a.date.localeCompare(b.date));
+    if (v.length >= 2) res.push({ r: v[v.length-1], first: v[0].iiefN, last: v[v.length-1].iiefN, n: v.length, d1: v[0].date, d2: v[v.length-1].date });
+  });
+  const el = $('#outcomes');
+  if (!res.length){ el.innerHTML = '<div class="empty">No patient in the current filter has two or more IIEF-5 scores yet.</div>'; return; }
+  const up = res.filter(x=>x.last>x.first), same = res.filter(x=>x.last===x.first), down = res.filter(x=>x.last<x.first);
+  const mean = (res.reduce((s,x)=>s+x.last-x.first,0)/res.length).toFixed(1);
+  el.innerHTML = `<div class="outc">
+      <div><b>${res.length}</b><span>patients</span></div>
+      <div><b style="color:var(--ok)">${up.length}</b><span>improved</span></div>
+      <div><b>${same.length}</b><span>same score</span></div>
+      <div><b>${mean>0?'+':''}${mean}</b><span>mean change</span></div></div>
+    ${same.length ? `<div class="muted" style="font-size:12px;margin-bottom:8px">A score that never changes is often copied forward from the first visit. Re-scoring IIEF-5 at each follow-up makes this panel reliable.</div>`:''}
+    <div class="tbl-wrap" style="max-height:230px"><table><thead><tr><th>Patient</th><th>First</th><th>Latest</th><th>Change</th><th>Scored visits</th></tr></thead><tbody>
+    ${res.sort((a,b)=>(b.last-b.first)-(a.last-a.first)).map(x => `<tr data-k="${esc(x.r.pkey)}"><td>${esc(x.r.name)}</td><td>${x.first} <span class="muted">${fmtDate(x.d1)}</span></td><td>${x.last} <span class="muted">${fmtDate(x.d2)}</span></td>
+      <td style="font-weight:700;color:${x.last>x.first?'var(--ok)':x.last<x.first?'var(--bad)':'inherit'}">${x.last-x.first>0?'+':''}${x.last-x.first}</td><td>${x.n}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  el.querySelectorAll('tr[data-k]').forEach(tr => tr.onclick = () => openPatient(tr.dataset.k));
+}
+function renderDQ(list){
+  const ed = list.filter(r=>r.isED);
+  const items = [
+    [ed.filter(r=>r.iiefN==null).length, `ED visits without an IIEF-5 score`, ed.length],
+    [list.filter(r=>r.smoking==='Not recorded').length, 'visits with smoking status not recorded', list.length],
+    [list.filter(r=>r.alcohol==='Not recorded').length, 'visits with alcohol use not recorded', list.length],
+    [list.filter(r=>r.bmiN==null).length, 'visits with no weight and height (BMI)', list.length],
+    [list.filter(r=>!r.phone).length, 'visits with no phone number', list.length],
+    [list.filter(r=>r.ic && /^\d+$/.test(r.ic) && r.ic.length!==12).length, 'visits with an IC that is not 12 digits', list.length],
+    [list.filter(r=>{ const a = ageFromIC(r.ic, r.date); return a!=null && r.ageN!=null && Math.abs(a-r.ageN)>1; }).length, 'visits where the age does not match the IC', list.length],
+    [list.filter(r=>!r.fuUnder || r.fuUnder==='Not specified').length, 'visits with follow-up location not specified', list.length],
+    [list.filter(r=>!r.date).length, 'visits with no date', list.length]
+  ];
+  $('#dq').innerHTML = items.map(([n,t,d]) => `<li><b>${n}</b> ${t}${d?` <span class="muted">(${pct(n,d)})</span>`:''}</li>`).join('');
+}
+
+/* ================= register table ================= */
+function renderTable(list){
+  const q = $('#search').value.trim().toLowerCase();
+  let v = q ? list.filter(r => [r.name,r.ic,r.dx,r.mgmt,r.group,r.notes,r.refTo,r.refFrom].join(' ').toLowerCase().includes(q)) : list.slice();
+  v.sort((a,b) => {
+    let x = a[sortKey], y = b[sortKey];
+    if (sortKey==='age'||sortKey==='iief'){ x = num(x); y = num(y); x = x==null?-1:x; y = y==null?-1:y; return (x-y)*sortDir; }
+    return String(x||'').localeCompare(String(y||''))*sortDir;
+  });
+  $('#regCount').textContent = v.length + ' of ' + rows.length + ' visits';
+  const sevCls = s => s ? 'sev-' + sevIdx(s) : '';
+  $('#tbody').innerHTML = v.slice(0,600).map(r => `<tr data-k="${esc(r.pkey)}">
+    <td style="white-space:nowrap">${fmtDate(r.date)||'<span class="muted">no date</span>'}</td>
+    <td><b>${esc(r.name)}</b>${r.totalVisits>1?` <span class="muted">· visit ${r.visitNo}/${r.totalVisits}</span>`:''}</td>
+    <td>${esc(r.ic)}</td><td>${esc(r.age)}</td><td>${esc(r.case)}</td><td>${esc(r.group)}</td>
+    <td class="wrap">${esc(r.dx)}</td>
+    <td>${r.iiefN!=null?`<span class="badge ${sevCls(r.sev)}">${r.iiefN}</span>`:''}</td>
+    <td>${esc(r.pde==='N/A'?'':r.pde)}${r.drug?` <span class="muted">${esc(r.drug)}</span>`:''}</td>
+    <td>${esc(r.fu)}${r.fuUnder&&r.fuUnder!=='Not specified'?` <span class="muted">(${esc(r.fuUnder)})</span>`:''}</td>
+    <td>${esc(r.clinician)}</td></tr>`).join('') || '<tr><td colspan="11" class="empty">No visits match.</td></tr>';
+  $('#tbody').querySelectorAll('tr[data-k]').forEach(tr => tr.onclick = () => openPatient(tr.dataset.k));
+}
+
+/* ================= patient modal ================= */
+let currentPatient = null;
+function lifeLine(r){
+  const p = [];
+  if (r.smoking!=='Not recorded') p.push('Smoking: ' + r.smoking + (r.cig?` (${r.cig}/day)`:''));
+  if (r.vaping!=='Not recorded') p.push('Vaping: ' + r.vaping);
+  if (r.alcohol!=='Not recorded') p.push('Alcohol: ' + r.alcohol);
+  if (r.activity!=='Not recorded') p.push('Activity: ' + r.activity);
+  if (r.bmiN!=null) p.push('BMI ' + r.bmiN + (r.weight?` (${r.weight} kg, ${r.height} cm)`:''));
+  if (r.substances) p.push('Substances: ' + r.substances);
+  return p.join(' · ') || 'Not recorded';
+}
+function openPatient(pkey){
+  const v = rows.filter(r=>r.pkey===pkey).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if (!v.length) return;
+  currentPatient = v[0];
+  $('#pName').textContent = v[0].name || '(no name)';
+  const ageNow = ageFromIC(v[0].ic);
+  $('#pSub').textContent = [v[0].ic, ageNow!=null? ageNow+' years (from IC)': v[0].age? v[0].age+' years':'' , v[0].phone, v.length + (v.length>1?' visits':' visit')].filter(Boolean).join(' · ');
+  const sevCls = s => s ? 'sev-' + sevIdx(s) : '';
+  $('#pVisits').innerHTML = v.map(r => `<div class="visit"><div class="top"><b>${fmtDate(r.date)||'No date'}</b><span class="muted">${esc(r.id)}</span>
+      <span class="badge" style="background:var(--navy)">${esc(r.case||'-')}</span>${r.iiefN!=null?`<span class="badge ${sevCls(r.sev)}">IIEF-5 ${r.iiefN}</span>`:''}
+      ${r.ipssN!=null?`<span class="badge" style="background:#5d6778">IPSS ${r.ipssN}</span>`:''}
+      <span style="margin-left:auto;display:flex;gap:6px">${mode==='live'?`<button class="btn sm" data-edit="${esc(r.id)}">Edit</button><button class="btn sm danger" data-del="${esc(r.id)}">Delete</button>`:''}</span></div>
+    <div class="grid">
+      <div>Main diagnosis</div><div>${esc(r.group)}${r.dx?' · '+esc(r.dx):''}</div>
+      ${r.otherDx?`<div>Other men's health dx</div><div>${esc(r.otherDx)}</div>`:''}
+      ${r.comorb?`<div>Comorbidities</div><div>${esc(r.comorb)}</div>`:''}
+      <div>Lifestyle</div><div>${esc(lifeLine(r))}</div>
+      <div>Management</div><div>${esc(r.mgmt)||'-'}</div>
+      <div>PDE5i</div><div>${esc(r.pde)}${r.drug?' · '+esc(r.drug):''}</div>
+      <div>Follow-up</div><div>${esc(r.fu)||'-'}${r.fuUnder?' · '+esc(r.fuUnder):''}</div>
+      ${r.refFrom&&r.refFrom!=='KKSB'?`<div>Referred from</div><div>${esc(r.refFrom)}</div>`:''}
+      ${r.refTo?`<div>Referred to</div><div>${esc(r.refTo)}</div>`:''}
+      ${r.notes?`<div>Notes</div><div>${esc(r.notes)}</div>`:''}
+      ${r.clinician?`<div>Clinician</div><div>${esc(r.clinician)}</div>`:''}
+    </div></div>`).join('');
+  $('#pVisits').querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { closeModals(); startEdit(b.dataset.edit); });
+  $('#pVisits').querySelectorAll('[data-del]').forEach(b => b.onclick = () => delVisit(b.dataset.del));
+  $('#pNew').style.display = '';
+  $('#pModal').classList.add('show');
+}
+function closeModals(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show')); }
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target===m || e.target.hasAttribute('data-close')) closeModals(); }));
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModals(); });
+$('#pNew').onclick = () => { const p = currentPatient; closeModals(); resetForm(); fillPatient(p); $('#f').date.focus(); };
+
+/* ================= form ================= */
+const f = $('#f');
+function initForm(){
+  f.group.innerHTML = '<option value="">Select…</option>' + GROUPS.map(g=>`<option>${esc(g)}</option>`).join('');
+  f.pde.innerHTML = PDE.map(g=>`<option ${g==='N/A'?'selected':''}>${esc(g)}</option>`).join('');
+  f.fuUnder.innerHTML = FU_UNDER.map(g=>`<option ${g==='Not specified'?'selected':''}>${esc(g)}</option>`).join('');
+  const opts = a => a.map(g=>`<option>${esc(g)}</option>`).join('');
+  f.smoking.innerHTML = opts(SMOKING); f.vaping.innerHTML = opts(VAPING); f.alcohol.innerHTML = opts(ALCOHOL); f.activity.innerHTML = opts(ACTIVITY);
+  const boxes = list => list.map(([v,l])=>`<label><input type="checkbox" value="${esc(v)}">${esc(l)}</label>`).join('');
+  $('#comorbChecks').innerHTML = boxes(COMORB_BOXES);
+  $('#otherDxChecks').innerHTML = boxes(MH_DX.map(x=>[x,x]));
+  $('#subChecks').innerHTML = boxes(SUBSTANCES.map(x=>[x,x]));
+  resetForm();
+}
+function resetForm(){
+  f.reset(); editingId = null;
+  f.date.value = todayISO(); f.refFrom.value = 'KKSB'; f.clinician.value = settings.clin || '';
+  f.pde.value = 'N/A'; f.fuUnder.value = 'Not specified';
+  ['smoking','vaping','alcohol','activity'].forEach(k => f[k].value = 'Not recorded');
+  $('#editTag').classList.remove('show'); $('#formHint').textContent = 'New entry'; $('#btnSave').textContent = 'Save visit';
+  $('#icInfo').textContent = ''; $('#scoreInfo').innerHTML = ''; $('#nitrateAlert').classList.remove('show'); msg(''); bmiInfo();
+}
+function msg(t){ const m=$('#formMsg'); m.innerHTML=t; m.classList.toggle('show', !!t); }
+// checkbox group helpers: text "A, B, free text" <-> ticked boxes + "other" input
+function setChecks(boxId, otherInput, text){
+  const parts = String(text||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const boxes = [...$(boxId).querySelectorAll('input')];
+  const other = [];
+  boxes.forEach(b => b.checked = false);
+  parts.forEach(p => { const b = boxes.find(x => x.value.toLowerCase() === p.toLowerCase()); if (b) b.checked = true; else other.push(p); });
+  if (otherInput) otherInput.value = other.join(', ');
+}
+function getChecks(boxId, otherInput){
+  const c = [...$(boxId).querySelectorAll('input:checked')].map(b=>b.value);
+  if (otherInput && otherInput.value.trim()) c.push(otherInput.value.trim());
+  return c.join(', ');
+}
+const setComorb = t => setChecks('#comorbChecks', f.comorbOther, t);
+const getComorb = () => getChecks('#comorbChecks', f.comorbOther);
+function bmiInfo(){
+  const b = calcBmi(f.weight.value, f.height.value);
+  $('#bmiOut').value = b==null ? '' : b;
+  const cat = bmiCat(b);
+  const col = {[BMI_CAT[0]]:'#8bbf3f',[BMI_CAT[1]]:'var(--sev0)',[BMI_CAT[2]]:'var(--sev2)',[BMI_CAT[3]]:'var(--red)'}[cat];
+  $('#bmiInfo').innerHTML = cat ? `<span class="badge" style="background:${col};${cat===BMI_CAT[2]?'color:#1c2333':''}">${esc(cat)}</span>` : '';
+}
+function fillPatient(p){
+  if (!p) return;
+  f.ic.value = p.ic; f.name.value = p.name; f.phone.value = p.phone; f.address.value = p.address;
+  const a = ageFromIC(p.ic, f.date.value); f.age.value = a!=null ? a : p.age;
+  setComorb(p.comorb);
+  ['smoking','vaping','alcohol','activity'].forEach(k => f[k].value = p[k] || 'Not recorded');
+  f.cig.value = p.cig; f.height.value = p.height;
+  setChecks('#subChecks', f.subOther, p.substances);
+  f.case.value = 'Ulangan'; f.refFrom.value = p.refFrom || 'KKSB';
+  bmiInfo(); icLookup();
+}
+['input','change'].forEach(ev => { f.weight.addEventListener(ev, bmiInfo); f.height.addEventListener(ev, bmiInfo); });
+function icLookup(){
+  const ic = f.ic.value.replace(/\W/g,'').toUpperCase();
+  const info = $('#icInfo');
+  if (!ic){ info.textContent=''; return; }
+  const prev = rows.filter(r=>r.pkey===ic && r.id!==editingId).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const a = ageFromIC(ic, f.date.value);
+  if (a!=null && !f.age.value) f.age.value = a;
+  if (prev.length){
+    const p = prev[0];
+    info.innerHTML = `Returning patient · ${prev.length} earlier visit${prev.length>1?'s':''}, last ${fmtDate(p.date)} (${esc(p.group)}${p.iiefN!=null?', IIEF-5 '+p.iiefN:''}) · <a href="#" id="useLast">copy details</a>`;
+    if (!editingId) f.case.value = 'Ulangan';
+    $('#useLast').onclick = e => { e.preventDefault(); fillPatient(p); };
+  } else {
+    info.textContent = /^\d{12}$/.test(ic) ? 'New patient' + (a!=null?` · ${a} years from IC`:'') : (/^\d+$/.test(ic) ? 'Check IC: Malaysian IC has 12 digits' : 'Passport / other ID');
+    if (!editingId) f.case.value = 'Baru';
+  }
+}
+function scoreInfo(){
+  const s = num(f.iief.value), p = num(f.ipss.value);
+  const out = [];
+  if (s!=null) out.push(`<span class="badge sev-${sevIdx(sevOf(s))}">IIEF-5 ${sevOf(s)}</span>`);
+  if (p!=null) out.push(`<span class="badge" style="background:#5d6778">IPSS ${ipssOf(p)}</span>`);
+  $('#scoreInfo').innerHTML = out.join(' ');
+  if (s!=null && !f.group.value) f.group.value = s>=22 ? 'Screening (normal)' : 'ED';
+}
+function nitrateCheck(){
+  const pdeOn = ['Prescribed','Continued'].includes(f.pde.value) || f.drug.value;
+  const risk = $('#comorbChecks').querySelector('input[value=IHD]').checked || /GTN|nitrate|ISMN|isosorbide/i.test(f.mgmt.value + ' ' + f.comorbOther.value);
+  $('#nitrateAlert').classList.toggle('show', !!(pdeOn && risk));
+}
+f.ic.addEventListener('change', icLookup); f.ic.addEventListener('blur', icLookup);
+f.name.addEventListener('change', () => {
+  if (f.ic.value) return;
+  const p = rows.filter(r=>r.name.toLowerCase()===f.name.value.trim().toLowerCase()).sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  if (p) fillPatient(p);
+});
+f.date.addEventListener('change', () => { const a = ageFromIC(f.ic.value, f.date.value); if (a!=null) f.age.value = a; });
+['input','change'].forEach(ev => { f.iief.addEventListener(ev, scoreInfo); f.ipss.addEventListener(ev, scoreInfo); });
+[f.pde, f.drug, f.mgmt, f.comorbOther].forEach(el => el.addEventListener('input', nitrateCheck));
+$('#comorbChecks').addEventListener('change', nitrateCheck);
+f.drug.addEventListener('change', () => { if (f.drug.value && (f.pde.value==='N/A'||f.pde.value==='Deferred')) f.pde.value='Prescribed'; nitrateCheck(); });
+f.group.addEventListener('change', () => { if (f.group.value==='ED' && f.pde.value==='N/A') f.pde.value='Deferred'; });
+$('#btnReset').onclick = resetForm;
+$('#cancelEdit').onclick = e => { e.preventDefault(); resetForm(); };
+
+function startEdit(id){
+  const r = rows.find(x=>x.id===id); if (!r) return;
+  resetForm(); editingId = id;
+  FORM_KEYS.forEach(k => { if (f[k]) f[k].value = r[k] || (['smoking','vaping','alcohol','activity'].includes(k)?'Not recorded':''); });
+  setComorb(r.comorb);
+  setChecks('#otherDxChecks', null, r.otherDx);
+  setChecks('#subChecks', f.subOther, r.substances);
+  bmiInfo();
+  $('#editTag').classList.add('show'); $('#editId').textContent = id; $('#formHint').textContent = 'Editing'; $('#btnSave').textContent = 'Save changes';
+  scoreInfo(); nitrateCheck(); icLookup();
+  $('#formCard').scrollTop = 0; window.scrollTo({top:0, behavior:'smooth'});
+}
+async function delVisit(id){
+  const r = rows.find(x=>x.id===id); if (!r) return;
+  if (!confirm(`Delete visit ${id} (${r.name}, ${fmtDate(r.date)}) from the Google Sheet? This cannot be undone from this page.`)) return;
+  try { await api('delete', { id }); rows = rows.filter(x=>x.id!==id); finalize(); closeModals(); refreshAll(); toast('Visit deleted'); }
+  catch(e){ toast('Delete failed: ' + e.message, true); }
+}
+
+f.addEventListener('submit', async e => {
+  e.preventDefault();
+  const o = {};
+  FORM_KEYS.forEach(k => o[k] = (f[k].value||'').trim());
+  o.ic = o.ic.replace(/[\s-]/g,'').toUpperCase();
+  o.comorb = getComorb();
+  o.otherDx = getChecks('#otherDxChecks', null);
+  o.substances = getChecks('#subChecks', f.subOther);
+  const b = calcBmi(o.weight, o.height); o.bmi = b==null ? '' : b;
+  if (!o.date || !o.name || !o.ic || !o.group){ msg('Please fill in visit date, IC, patient name and main diagnosis.'); return; }
+  if (o.iief && (o.iief<1 || o.iief>25)) { msg('IIEF-5 must be between 1 and 25.'); return; }
+  if (o.ipss && (o.ipss<0 || o.ipss>35)) { msg('IPSS must be between 0 and 35.'); return; }
+  if (o.clinician && o.clinician !== settings.clin && !settings.clin){ settings.clin = o.clinician; saveSettings(settings); }
+  const btn = $('#btnSave'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    if (mode === 'live'){
+      if (editingId){ o.id = editingId; const j = await api('update', { row:o }); replaceRow(j.row); toast('Changes saved to Google Sheet'); }
+      else { const j = await api('add', { row:o }); rows.push(derive(j.row)); toast('Saved to Google Sheet as ' + j.row.id); }
+    } else {
+      if (editingId){ o.id = editingId; replaceRow(o); } else { o.id = 'DEMO-NEW-' + (rows.length+1); rows.push(derive(o)); }
+      toast('Demo mode: not saved to any sheet');
+    }
+    finalize(); resetForm(); refreshAll();
+  } catch(err){ msg('Could not save: ' + esc(err.message) + '. Nothing was written. Check your connection and try again.'); }
+  finally { btn.disabled = false; btn.textContent = editingId ? 'Save changes' : 'Save visit'; }
+});
+function replaceRow(o){ const i = rows.findIndex(r=>r.id===o.id); const d = derive(o); if (i>-1) rows[i] = d; else rows.push(d); }
+
+/* ================= datalists ================= */
+function renderDatalists(){
+  const latest = {};
+  rows.slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(r => latest[r.pkey] = r);
+  const pts = Object.values(latest).filter(r=>r.ic);
+  $('#dlIc').innerHTML = pts.map(r=>`<option value="${esc(r.ic)}">${esc(r.name)}</option>`).join('');
+  $('#dlName').innerHTML = uniq(rows.map(r=>r.name)).map(n=>`<option value="${esc(n)}">`).join('');
+  $('#dlRefFrom').innerHTML = uniq(rows.map(r=>r.refFrom)).map(n=>`<option value="${esc(n)}">`).join('');
+  $('#dlRefTo').innerHTML = uniq(rows.map(r=>r.refTo)).map(n=>`<option value="${esc(n)}">`).join('');
+  $('#dlClin').innerHTML = uniq(rows.map(r=>r.clinician).concat(settings.clin||'')).map(n=>`<option value="${esc(n)}">`).join('');
+}
+
+/* ================= refresh ================= */
+function refreshAll(){
+  const list = filtered();
+  renderFilterControls(); renderKPIs(list); renderCharts(list); renderOutcomes(list); renderDQ(list); renderTable(list); renderDatalists();
+}
+
+/* ================= toolbar ================= */
+document.querySelectorAll('#periodSeg button').forEach(b => b.onclick = () => {
+  const p = b.dataset.p, t = todayISO(), d = new Date();
+  if (p==='all') setRange('','','');
+  if (p==='month') setRange(t.slice(0,8)+'01', t, 'This month');
+  if (p==='3m'){ const s = new Date(d.getFullYear(), d.getMonth()-2, 1); setRange(s.getFullYear()+'-'+String(s.getMonth()+1).padStart(2,'0')+'-01', t, 'Last 3 months'); }
+  if (p==='year') setRange(t.slice(0,4)+'-01-01', t, 'This year');
+  markPeriod(p);
+});
+$('#fFrom').onchange = () => { F.from = $('#fFrom').value; F.month=''; markPeriod(''); refreshAll(); };
+$('#fTo').onchange = () => { F.to = $('#fTo').value; F.month=''; markPeriod(''); refreshAll(); };
+$('#btnClear').onclick = () => { Object.keys(F).forEach(k=>F[k]=''); $('#fFrom').value=''; $('#fTo').value=''; $('#search').value=''; markPeriod('all'); refreshAll(); };
+$('#search').oninput = () => renderTable(filtered());
+document.querySelectorAll('th[data-s]').forEach(th => th.onclick = () => { const k = th.dataset.s; if (sortKey===k) sortDir*=-1; else { sortKey=k; sortDir = k==='date'?-1:1; } renderTable(filtered()); });
+$('#btnRefresh').onclick = load;
+$('#btnPrint').onclick = () => window.print();
+$('#btnExport').onclick = () => {
+  const list = filtered();
+  const head = ['ID','Visit Date','Patient Name','IC / Passport','Phone','Age','Case','Main Diagnosis','Diagnosis Details',"Other Men's Health Dx",'IIEF-5','IIEF-5 Severity','IPSS','EHS','Smoking','Cigarettes/day','Vaping','Alcohol','Physical Activity','Weight (kg)','Height (cm)','BMI','BMI Category','Other Substances','Comorbidities','Management','PDE5i Status','PDE5i Drug','Follow-up Plan','Follow-up Under','Referred From','Referred To','Address','Notes','Clinician'];
+  const keys = ['id','date','name','ic','phone','age','case','group','dx','otherDx','iief','sev','ipss','ehs','smoking','cig','vaping','alcohol','activity','weight','height','bmiN','bmiCat','substances','comorb','mgmt','pde','drug','fu','fuUnder','refFrom','refTo','address','notes','clinician'];
+  const q = v => '"' + String(v??'').replace(/"/g,'""') + '"';
+  const csv = [head.map(q).join(',')].concat(list.map(r => keys.map(k => q(k==='ic'||k==='phone' ? (r[k]?'="'+r[k]+'"':'') : r[k])).join(','))).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿'+csv], {type:'text/csv'}));
+  a.download = 'mens-health-visits-' + todayISO() + '.csv'; a.click(); URL.revokeObjectURL(a.href);
+};
+$('#btnSettings').onclick = () => {
+  $('#sUrl').value = settings.url||''; $('#sKey').value = settings.key||''; $('#sRemember').checked = !!settings.remember; $('#sClin').value = settings.clin||'';
+  $('#sModal').classList.add('show');
+};
+$('#sSave').onclick = () => {
+  settings = { url: $('#sUrl').value.trim(), key: $('#sKey').value.trim(), remember: $('#sRemember').checked, clin: $('#sClin').value.trim() };
+  saveSettings(settings); closeModals(); resetForm(); load();
+};
+$('#sForget').onclick = () => {
+  settings = { clin: settings.clin }; saveSettings(settings);
+  try { sessionStorage.removeItem(LS+'-key'); } catch(e) {}
+  closeModals(); load();
+};
+window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(renderMonthly, 150); });
+
+function setView(v){
+  document.body.classList.toggle('v-dash', v==='dash'); document.body.classList.toggle('v-log', v==='log');
+  document.querySelectorAll('#viewSeg button').forEach(b => b.classList.toggle('on', b.dataset.v===v));
+  if (v==='dash') renderMonthly();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => setView(b.dataset.v));
+const _startEdit = startEdit;
+startEdit = id => { setView('log'); _startEdit(id); };
+$('#pNew').addEventListener('click', () => setView('log'));
+setView('dash');
+
+initForm();
+load();
+})();
+</script>
+</body>
+</html>
